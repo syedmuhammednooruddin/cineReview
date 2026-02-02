@@ -59,8 +59,15 @@
     gap: 1.5rem;
 }
 
+.search-bar-container {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
 .search-bar {
     position: relative;
+    width: 100%;
     display: flex;
     align-items: center;
 }
@@ -69,6 +76,7 @@
     position: absolute;
     left: 1rem;
     color: var(--color-text-secondary);
+    z-index: 5;
 }
 
 .search-bar input {
@@ -78,7 +86,7 @@
     padding: 0.5rem 1rem 0.5rem 2.5rem;
     color: var(--color-text-primary);
     font-family: var(--font-body);
-    width: 200px;
+    width: 100%;
     transition: all 0.3s ease;
 }
 
@@ -86,7 +94,83 @@
     outline: none;
     border-color: var(--color-accent);
     background: rgba(255, 255, 255, 0.1);
-    width: 250px;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+}
+
+.search-suggestions {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suggestion-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.suggestion-poster {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.suggestion-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.suggestion-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.suggestion-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.suggestion-meta .dot {
+    font-size: 1rem;
 }
 
 .menu-btn {

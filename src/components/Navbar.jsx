@@ -1,14 +1,45 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Film, Menu, X, User, LogOut, Settings } from 'lucide-react';
+import { Search, Film, Menu, X, User, LogOut, Settings, Calendar, Star } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getAllMovies } from '../data/movies';
 import './Navbar.css';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const allMovies = getAllMovies();
+
+    const handleSearchChange = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+
+        if (query.trim().length > 0) {
+            const filtered = allMovies.filter(m =>
+                m.title.toLowerCase().includes(query.toLowerCase()) ||
+                m.genre.toLowerCase().includes(query.toLowerCase()) ||
+                m.director.toLowerCase().includes(query.toLowerCase()) ||
+                m.cast.some(actor => actor.toLowerCase().includes(query.toLowerCase()))
+            ).slice(0, 5); // Limit to 5 suggestions
+            setSuggestions(filtered);
+            setShowSuggestions(true);
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSuggestionClick = (movieId) => {
+        navigate(`/movie/${movieId}`);
+        setSearchQuery('');
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setIsMenuOpen(false);
+    };
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
@@ -47,15 +78,41 @@ const Navbar = () => {
                 </div>
 
                 <div className="nav-actions">
-                    <div className="search-bar">
-                        <Search size={18} className="search-icon" />
-                        <input
-                            type="text"
-                            placeholder="Search movies..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={handleSearch}
-                        />
+                    <div className="search-bar-container">
+                        <div className="search-bar">
+                            <Search size={18} className="search-icon" />
+                            <input
+                                type="text"
+                                placeholder="Search movies, cast, genre..."
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearch}
+                                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                                onFocus={() => searchQuery.trim() && setShowSuggestions(true)}
+                            />
+                        </div>
+
+                        {showSuggestions && suggestions.length > 0 && (
+                            <div className="search-suggestions glass">
+                                {suggestions.map(movie => (
+                                    <div
+                                        key={movie.id}
+                                        className="suggestion-item"
+                                        onClick={() => handleSuggestionClick(movie.id)}
+                                    >
+                                        <img src={movie.poster} alt={movie.title} className="suggestion-poster" />
+                                        <div className="suggestion-info">
+                                            <span className="suggestion-title">{movie.title}</span>
+                                            <div className="suggestion-meta">
+                                                <span>{movie.year}</span>
+                                                <span className="dot">•</span>
+                                                <span className="suggestion-genre">{movie.genre.split(',')[0]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {user ? (

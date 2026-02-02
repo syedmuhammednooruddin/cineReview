@@ -12,7 +12,12 @@ const Home = () => {
     const navigate = useNavigate();
 
     const filteredMovies = searchQuery
-        ? movies.filter(m => m.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        ? movies.filter(m =>
+            m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            m.genre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            m.director.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            m.cast.some(actor => actor.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
         : movies;
 
     const [currentMovieIndex, setCurrentMovieIndex] = React.useState(0);
