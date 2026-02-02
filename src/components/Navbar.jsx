@@ -33,13 +33,6 @@ const Navbar = () => {
         }
     };
 
-    const handleSuggestionClick = (movieId) => {
-        navigate(`/movie/${movieId}`);
-        setSearchQuery('');
-        setSuggestions([]);
-        setShowSuggestions(false);
-        setIsMenuOpen(false);
-    };
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
@@ -95,10 +88,15 @@ const Navbar = () => {
                         {showSuggestions && suggestions.length > 0 && (
                             <div className="search-suggestions glass">
                                 {suggestions.map(movie => (
-                                    <div
+                                    <Link
                                         key={movie.id}
+                                        to={`/movie/${movie.id}`}
                                         className="suggestion-item"
-                                        onClick={() => handleSuggestionClick(movie.id)}
+                                        onClick={() => {
+                                            setSearchQuery('');
+                                            setShowSuggestions(false);
+                                            setIsMenuOpen(false);
+                                        }}
                                     >
                                         <img src={movie.poster} alt={movie.title} className="suggestion-poster" />
                                         <div className="suggestion-info">
@@ -109,7 +107,7 @@ const Navbar = () => {
                                                 <span className="suggestion-genre">{movie.genre.split(',')[0]}</span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 ))}
                             </div>
                         )}
