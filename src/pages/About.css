@@ -1,0 +1,132 @@
+.about-page {
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: 4rem;
+    max-width: 900px;
+}
+
+.about-hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    border-radius: 24px;
+    margin-bottom: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-accent), #f59e0b, purple);
+}
+
+.about-icon {
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+}
+
+.about-title {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.about-description {
+    font-size: 1.25rem;
+    color: #d4d4d8;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.mission-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-accent);
+}
+
+.mission-section p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #d4d4d8;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.stat-card {
+    padding: 2rem;
+    text-align: center;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.contact-section {
+    text-align: center;
+}
+
+.contact-section h2 {
+    margin-bottom: 2rem;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.social-link {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+.social-link:hover {
+    background: var(--color-accent);
+    color: #000;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
