@@ -10,6 +10,7 @@ const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(-1);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const allMovies = getAllMovies();
@@ -27,18 +28,37 @@ const Navbar = () => {
             ).slice(0, 5); // Limit to 5 suggestions
             setSuggestions(filtered);
             setShowSuggestions(true);
+            setActiveIndex(-1);
         } else {
             setSuggestions([]);
             setShowSuggestions(false);
+            setActiveIndex(-1);
         }
     };
 
-
     const handleSearch = (e) => {
-        if (e.key === 'Enter') {
-            navigate(`/?search=${encodeURIComponent(searchQuery)}`);
-            setSearchQuery('');
-            setIsMenuOpen(false);
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setActiveIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setActiveIndex(prev => (prev > -1 ? prev - 1 : -1));
+        } else if (e.key === 'Enter') {
+            if (activeIndex >= 0 && suggestions[activeIndex]) {
+                e.preventDefault();
+                const movie = suggestions[activeIndex];
+                navigate(`/movie/${movie.id}`);
+                setSearchQuery('');
+                setShowSuggestions(false);
+                setIsMenuOpen(false);
+            } else if (searchQuery.trim()) {
+                navigate(`/?search=${encodeURIComponent(searchQuery)}`);
+                setSearchQuery('');
+                setIsMenuOpen(false);
+                setShowSuggestions(false);
+            }
+        } else if (e.key === 'Escape') {
+            setShowSuggestions(false);
         }
     };
 
@@ -87,16 +107,20 @@ const Navbar = () => {
 
                         {showSuggestions && suggestions.length > 0 && (
                             <div className="search-suggestions glass">
-                                {suggestions.map(movie => (
+                                {suggestions.map((movie, index) => (
                                     <Link
                                         key={movie.id}
                                         to={`/movie/${movie.id}`}
-                                        className="suggestion-item"
-                                        onClick={() => {
+                                        className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
+                                        onMouseDown={(e) => {
+                                            // Using onMouseDown to prevent the input blur from hiding results before click
+                                            e.preventDefault();
                                             setSearchQuery('');
                                             setShowSuggestions(false);
                                             setIsMenuOpen(false);
+                                            navigate(`/movie/${movie.id}`);
                                         }}
+                                        onMouseEnter={() => setActiveIndex(index)}
                                     >
                                         <img src={movie.poster} alt={movie.title} className="suggestion-poster" />
                                         <div className="suggestion-info">
